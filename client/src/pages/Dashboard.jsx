@@ -129,7 +129,7 @@ export default function Dashboard() {
                 Welcome back{user?.name ? `, ${user.name.split(' ')[0]}` : ''} ✨
               </h1>
               <p className="mt-2 max-w-2xl text-slate-500">
-                Your travel hub now includes a richer profile area, phone verification, and quick discovery tools for events, hotels, and restaurants.
+                Your travel hub now includes a richer profile area, phone verification, and quick discovery tools for <Link to="/explore/events" className="text-primary hover:underline">events</Link>, <Link to="/explore/hotels" className="text-primary hover:underline">hotels</Link>, and <Link to="/explore/restaurants" className="text-primary hover:underline">restaurants</Link>.
               </p>
             </div>
             <div className="flex items-center gap-3">
@@ -158,7 +158,9 @@ export default function Dashboard() {
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-4">
               <p className="text-sm uppercase tracking-wide text-slate-400">Next step</p>
-              <p className="mt-3 text-3xl font-bold text-slate-900">Explore more</p>
+              <Link to="/explore/events" className="mt-3 block text-3xl font-bold text-slate-900 hover:text-primary">
+                Explore more
+              </Link>
             </div>
           </div>
         </section>
