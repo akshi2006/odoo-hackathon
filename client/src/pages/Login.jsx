@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import toast from 'react-hot-toast';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const quotes = [
   { text: 'The world is a book and those who do not travel read only one page.', author: 'Saint Augustine' },
@@ -12,8 +15,13 @@ const quotes = [
 export default function Login() {
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [isLogin, setIsLogin] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const { loginRequest, register } = useAuth();
+  const navigate = useNavigate();
 
-  // rotate quotes
   useEffect(() => {
     const timer = setInterval(() => {
       setQuoteIdx((prev) => (prev + 1) % quotes.length);
@@ -23,6 +31,30 @@ export default function Login() {
   }, []);
 
   const quote = quotes[quoteIdx];
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        await loginRequest({ email, password });
+        toast.success('Signed in successfully');
+      } else {
+        if (!name.trim()) {
+          toast.error('Please enter your name');
+          return;
+        }
+        await register({ name, email, password });
+        toast.success('Account created successfully');
+      }
+      navigate('/dashboard');
+    } catch (error) {
+      toast.error(error.message || 'Unable to sign in');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="flex h-screen w-full bg-neutral-900 text-white font-sans">
@@ -63,7 +95,6 @@ export default function Login() {
       {/* RIGHT SIDE */}
       <div className="flex w-full lg:w-1/2 items-center justify-center p-8 lg:p-24 relative">
 
-        {/* glow background */}
         <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-600 rounded-full blur-[120px] opacity-20" />
         <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full blur-[120px] opacity-20" />
 
@@ -83,12 +114,13 @@ export default function Login() {
               : 'Create an account to get started.'}
           </p>
 
-          <form className="space-y-5">
-
+          <form className="space-y-5" onSubmit={handleSubmit}>
             {!isLogin && (
               <div>
                 <label className="text-sm text-neutral-300">Name</label>
                 <input
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
                   type="text"
                   placeholder="John Doe"
                   className="w-full mt-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3"
@@ -99,6 +131,8 @@ export default function Login() {
             <div>
               <label className="text-sm text-neutral-300">Email</label>
               <input
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
                 type="email"
                 placeholder="you@example.com"
                 className="w-full mt-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3"
@@ -108,6 +142,8 @@ export default function Login() {
             <div>
               <label className="text-sm text-neutral-300">Password</label>
               <input
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
                 type="password"
                 placeholder="••••••••"
                 className="w-full mt-1 bg-black/30 border border-white/10 rounded-xl px-4 py-3"
@@ -115,15 +151,17 @@ export default function Login() {
             </div>
 
             <button
-              type="button"
-              className="w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-neutral-200 transition"
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-black font-semibold py-3 rounded-xl hover:bg-neutral-200 transition disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {isLogin ? 'Sign In' : 'Sign Up'}
+              {loading ? 'Working…' : isLogin ? 'Sign In' : 'Sign Up'}
             </button>
           </form>
 
           <button
-            onClick={() => setIsLogin(!isLogin)}
+            type="button"
+            onClick={() => setIsLogin((prev) => !prev)}
             className="mt-6 text-sm text-neutral-400 hover:text-white w-full text-center"
           >
             {isLogin
