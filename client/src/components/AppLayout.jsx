@@ -26,17 +26,85 @@ export default function AppLayout() {
             >
               My Trips
             </NavLink>
-            <Link
-              to="/trips/new"
-              className="rounded-lg bg-amber-400 px-3 py-2 text-sm font-bold text-slate-900 hover:bg-amber-300"
+            <NavLink
+              to="/plan-ai"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`
+              }
             >
-              + New Trip
-            </Link>
+              Plan with AI
+            </NavLink>
+            <NavLink
+              to="/explore/events"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`
+              }
+            >
+              Events
+            </NavLink>
+            <NavLink
+              to="/explore/exhibitions"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`
+              }
+            >
+              Exhibitions
+            </NavLink>
+            <NavLink
+              to="/explore/shows"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`
+              }
+            >
+              Shows
+            </NavLink>
+            <NavLink
+              to="/explore/restaurants"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`
+              }
+            >
+              Restaurants
+            </NavLink>
+            <NavLink
+              to="/explore/hotels"
+              className={({ isActive }) =>
+                `rounded-lg px-3 py-2 text-sm font-semibold transition ${
+                  isActive ? 'bg-teal-600 text-white' : 'text-slate-600 hover:bg-slate-100'
+                }`
+              }
+            >
+              Hotels
+            </NavLink>
           </nav>
           <div className="flex items-center gap-3">
-            <span className="hidden text-sm text-slate-500 sm:inline">
-              {user?.name}
-            </span>
+            <Link
+              to="/profile"
+              className="hidden items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 sm:inline-flex"
+            >
+              {user?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt="Profile"
+                  className="h-8 w-8 rounded-full object-cover"
+                />
+              ) : (
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-sm font-semibold text-amber-700">
+                  {user?.name?.charAt(0)?.toUpperCase() || 'P'}
+                </span>
+              )}
+              {user?.name?.split(' ')[0] || 'Profile'}
+            </Link>
             <button
               type="button"
               onClick={() => { logout(); navigate('/login'); }}
